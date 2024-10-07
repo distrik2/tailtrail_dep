@@ -28,8 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://5cf0-37-46-98-41.ngrok-free.app",
-    # "http://localhost:3000",
+    "https://tailtrail-dep.vercel.app",
+    "https://tailtrail-dep-distrik2s-projects.vercel.app,
+    "https://tailtrail-dep-git-main-distrik2s-projects.vercel.app,
     # Add any other domains you want to trust
 ]
 
@@ -80,8 +81,9 @@ REST_FRAMENORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:3000",  # Ваш домен React
-    "https://5cf0-37-46-98-41.ngrok-free.app",  # Ваш Django API через ngrok
+    "https://tailtrail-dep.vercel.app",
+    "https://tailtrail-dep-distrik2s-projects.vercel.app,
+    "https://tailtrail-dep-git-main-distrik2s-projects.vercel.app,
 ]
 
 CORS_ALLOW_HEADERS= [
