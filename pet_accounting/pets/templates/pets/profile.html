@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #0056b3;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Стили для карточки сотрудника */
+        .employee-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .employee-card img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .employee-card h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .employee-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        /* Поле выбора времени бронирования */
+        .booking-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .booking-form input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 60px;
+        }
+
+        .booking-form button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .booking-form button:hover {
+            background-color: #003d80;
+        }
+
+        /* Стили для информации о бронировании */
+        .booking-info {
+            font-size: 16px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .booking-info span {
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        .button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #218838;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0056b3;
+        }
+
+        a:hover {
+            color: #003d80;
+        }
+
+        /* Медиа-запросы для мобильных устройств */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1, h2 {
+                font-size: 20px;
+            }
+
+            li {
+                padding: 10px;
+            }
+
+            .employee-card h3 {
+                font-size: 16px;
+            }
+
+            .booking-info {
+                font-size: 14px;
+            }
+
+            .booking-form input {
+                width: 50px;
+                padding: 8px;
+            }
+
+            .booking-form button {
+                padding: 8px 16px;
+            }
+
+            .button {
+                padding: 8px 16px;
+            }
+
+            a {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <script>
+        // Скрипт для закрытия клавиатуры при нажатии вне поля ввода
+        document.addEventListener("click", function (event) {
+          if (!event.target.closest("input")) {
+            document.activeElement.blur(); // Закрытие клавиатуры
+          }
+        });
+      </script>
+</head>
+<body>
+    <h1>Добро пожаловать, {{ pet_profile.full_name }}!</h1>
+    <h2>Данные о вашем питомце</h2>
+    <ul>
+        <li>Имя: {{ pet_profile.pet_name }}</li>
+        <li>Порода: {{ pet_profile.pet_breed }}</li>
+        <li>Возраст: {{ pet_profile.pet_age }} лет</li>
+    </ul>
+
+    <h2>Наши сотрудники</h2>
+    <ul>
+        {% for employee in employees %}
+            <li class="employee-card">
+                <img src="{{ employee.photo.url }}" alt="Фото сотрудника">
+                <h3>{{ employee.name }} ({{ employee.rating }} звезды)</h3>
+                <p>Телефон: {{ employee.phone_number }}</p>
+                <p>Цена за час: {{ employee.hourly_rate }} Тенге</p>
+                
+                {% if not bookings %}
+                <!-- Форма бронирования -->
+                <div class="booking-form">
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="employee_id" value="{{ employee.id }}">
+                        <label for="hours">На сколько часов оставить питомца:</label><br>
+                        <input type="number" name="hours" min="1" max="24" required>
+                        <p>Итоговая стоимость: <span id="total_price">{{ employee.hourly_rate }} Тенге</span></p>
+                        <button type="submit">Оставить питомца</button>
+                    </form>
+                </div>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>Нет сотрудников</p>
+        {% endfor %}
+    </ul>
+
+    <h2>Ваши отданные питомцы</h2>
+    <ul>
+        {% for booking in bookings %}
+            <li>
+                <p class="booking-info">
+                    Питомец <span>{{ booking.pet.pet_name }}</span> у сотрудника <span>{{ booking.employee.name }}</span><br>
+                    с <span>{{ booking.start_time|date:"F j, Y, g:i A" }}</span> до <span>{{ booking.end_time|date:"F j, Y, g:i A" }}</span>
+                </p>
+                <form method="post" action="{% url 'pick_up_pet' booking.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button">Забрать питомца</button>
+                </form>
+            </li>
+        {% empty %}
+            <p>Вы никому не отдали питомца</p>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'logout' %}">Выйти</a>
+</body>
+</html>

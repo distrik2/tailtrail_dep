@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <style>
+      /* Основные стили */
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Контейнер формы */
+      .form-container {
+        background: white;
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Заголовок */
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #4a4a4a;
+        text-align: center;
+      }
+
+      /* Стили для формы */
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Поля ввода */
+      input[type="text"],
+      input[type="password"] {
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Кнопка */
+      button {
+        padding: 12px;
+        margin-top: 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      /* Ссылка на регистрацию */
+      p {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Адаптивность для мобильных устройств */
+      @media (max-width: 600px) {
+        .form-container {
+          padding: 20px;
+        }
+
+        h2 {
+          font-size: 22px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        button {
+          font-size: 14px;
+        }
+      }
+    </style>
+    <script>
+        // Скрипт для закрытия клавиатуры при нажатии вне поля ввода
+        document.addEventListener("click", function (event) {
+          if (!event.target.closest("input")) {
+            document.activeElement.blur(); // Закрытие клавиатуры
+          }
+        });
+      </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Вход</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Войти</button>
+            <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+        </form>
+    </div>
+</body>
+</html>
